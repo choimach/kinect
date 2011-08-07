@@ -122,14 +122,13 @@
             config.ProcessXmlNodes("//configuration/gestureSettings",
                                     settings =>
                                     {
-                                        if (settings.Attributes.Count > 0)
-                                            generalSettings = DTWRecognizer.ThresholdSettings.CreateFromXML(settings);
+                                        generalSettings = DTWRecognizer.ThresholdSettings.CreateFromXML(settings, false);
                                     });
 
             config.ProcessXmlNodes("//configuration/gestureSettings/gestureSetting",
                                     settings =>
                                     {
-                                        GestureId gestureId = (GestureId)int.Parse(settings.Attributes["gestureId"].Value);
+                                        GestureId gestureId = (GestureId)int.Parse(settings.Attributes["gesture"].Value);
 
                                         if (!this.Gestures.ContainsKey(gestureId))
                                             throw new InvalidDataException(string.Format("Gesture {0} is not specified in the gestures section of the config file",

@@ -28,9 +28,7 @@
     <transition fromState="2" onEvent="1" moveToState="1" />
     <transition fromState="3" onEvent="1" moveToState="1" />
   </statetransitions>
-  <gestureSettings firstThreshold="1" matchThreshold="1" maxSlope="3">
-    <gestureSetting gesture="1" firstThreshold="1" matchThreshold="1" maxSlope="3" />
-    <gestureSetting gesture="2" firstThreshold="1" matchThreshold="1" maxSlope="3" />
-    <gestureSetting gesture="3" firstThreshold="0.5" matchThreshold="1" maxSlope="3" />
+  <gestureSettings firstThreshold="0.5" matchThreshold="1" maxSlope="3">
+    <gestureSetting gesture="3" firstThreshold="0.4" matchThreshold="0.4" maxSlope="3" />
   </gestureSettings>
 </configuration>

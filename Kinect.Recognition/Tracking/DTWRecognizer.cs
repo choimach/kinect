@@ -20,17 +20,27 @@
             public double MatchThreshold { get; set; }
             public double MaxSlope { get; set; }
 
-            public static ThresholdSettings CreateFromXML(XmlNode node)
+            /// <summary>
+            /// Creates a new instance based on xml configuration
+            /// </summary>
+            /// <param name="node">The node holding the configuration</param>
+            /// <param name="throwOnMissing">Controls if an exception should be thrown if the attributes are missing</param>
+            /// <returns>A new initialized instance or null</returns>
+            public static ThresholdSettings CreateFromXML(XmlNode node, bool throwOnMissing = true)
             {
-                if (node.Attributes.Count != ThresholdSettings.AttributesCount)
+                ThresholdSettings result = null;
+
+                if (node.Attributes.Count >= ThresholdSettings.AttributesCount)
+                    result = new DTWRecognizer.ThresholdSettings()
+                    {
+                        FirstThreshold = double.Parse(node.Attributes["firstThreshold"].Value),
+                        MatchThreshold = double.Parse(node.Attributes["matchThreshold"].Value),
+                        MaxSlope = double.Parse(node.Attributes["maxSlope"].Value)
+                    };
+                else if (throwOnMissing)
                     throw new InvalidDataException("Invalid number of attributes");
 
-                return new DTWRecognizer.ThresholdSettings()
-                {
-                    FirstThreshold = double.Parse(node.Attributes["firstThreshold"].Value),
-                    MatchThreshold = double.Parse(node.Attributes["matchThreshold"].Value),
-                    MaxSlope = double.Parse(node.Attributes["maxSlope"].Value)
-                };
+                return result;
             }
         }
 
