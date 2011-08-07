@@ -33,6 +33,6 @@
         /// <summary>
         /// Gesture recognition settings by id
         /// </summary>
-        Dictionary<GestureId, DTWRecognizer.TreshholdSettings> GestureSettings { get; }
+        Dictionary<GestureId, DTWRecognizer.ThresholdSettings> GestureSettings { get; }
     }
 }

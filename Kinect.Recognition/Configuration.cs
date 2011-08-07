@@ -20,7 +20,7 @@
         public Dictionary<GestureId, ArrayList> Gestures { get; private set; }
         public Dictionary<KeyValuePair<FSMStateId, GestureId>, FSMEventId> GestureTransitions { get; private set; }
         public Dictionary<KeyValuePair<FSMStateId, FSMEventId>, FSMStateId> StateTransitions { get; private set; }
-        public Dictionary<GestureId, DTWRecognizer.TreshholdSettings> GestureSettings { get; private set; }
+        public Dictionary<GestureId, DTWRecognizer.ThresholdSettings> GestureSettings { get; private set; }
 
         /// <summary>
         /// Default ctor
@@ -31,7 +31,7 @@
             this.Gestures = new Dictionary<GestureId, ArrayList>();
             this.GestureTransitions = new Dictionary<KeyValuePair<FSMStateId, GestureId>, FSMEventId>();
             this.StateTransitions = new Dictionary<KeyValuePair<FSMStateId, FSMEventId>, FSMStateId>();
-            this.GestureSettings = new Dictionary<GestureId, DTWRecognizer.TreshholdSettings>();
+            this.GestureSettings = new Dictionary<GestureId, DTWRecognizer.ThresholdSettings>();
         }
 
         /// <summary>
@@ -109,21 +109,21 @@
             this.LoadGestures(config);
             this.LoadGestureTransitions(config);
             this.LoadStateTransitions(config);
-            this.LoadTreshholds(config);
+            this.LoadThresholds(config);
         }
 
         /// <summary>
         /// Loads the states configuration and creates all necessary state objects
         /// </summary>
         /// <param name="config">The configuration node</param>
-        private void LoadTreshholds(XmlDocument config)
+        private void LoadThresholds(XmlDocument config)
         {
-            DTWRecognizer.TreshholdSettings generalSettings = null;
+            DTWRecognizer.ThresholdSettings generalSettings = null;
             config.ProcessXmlNodes("//configuration/gestureSettings",
                                     settings =>
                                     {
                                         if (settings.Attributes.Count > 0)
-                                            generalSettings = DTWRecognizer.TreshholdSettings.CreateFromXML(settings);
+                                            generalSettings = DTWRecognizer.ThresholdSettings.CreateFromXML(settings);
                                     });
 
             config.ProcessXmlNodes("//configuration/gestureSettings/gestureSetting",
@@ -135,7 +135,7 @@
                                             throw new InvalidDataException(string.Format("Gesture {0} is not specified in the gestures section of the config file",
                                                                             gestureId.ToString()));
 
-                                        this.GestureSettings[gestureId] = DTWRecognizer.TreshholdSettings.CreateFromXML(settings);
+                                        this.GestureSettings[gestureId] = DTWRecognizer.ThresholdSettings.CreateFromXML(settings);
                                     });
 
             // make sure all gestures have their settings

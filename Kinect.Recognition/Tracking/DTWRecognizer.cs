@@ -12,23 +12,23 @@
 
     public class DTWRecognizer
     {
-        public class TreshholdSettings
+        public class ThresholdSettings
         {
             public const int AttributesCount = 3;
 
-            public double FirstTreshhold { get; set; }
-            public double MatchTreshhold { get; set; }
+            public double FirstThreshold { get; set; }
+            public double MatchThreshold { get; set; }
             public double MaxSlope { get; set; }
 
-            public static TreshholdSettings CreateFromXML(XmlNode node)
+            public static ThresholdSettings CreateFromXML(XmlNode node)
             {
-                if (node.Attributes.Count != TreshholdSettings.AttributesCount)
+                if (node.Attributes.Count != ThresholdSettings.AttributesCount)
                     throw new InvalidDataException("Invalid number of attributes");
 
-                return new DTWRecognizer.TreshholdSettings()
+                return new DTWRecognizer.ThresholdSettings()
                 {
-                    FirstTreshhold = double.Parse(node.Attributes["firstTreshhold"].Value),
-                    MatchTreshhold = double.Parse(node.Attributes["matchTreshhold"].Value),
+                    FirstThreshold = double.Parse(node.Attributes["firstThreshold"].Value),
+                    MatchThreshold = double.Parse(node.Attributes["matchThreshold"].Value),
                     MaxSlope = double.Parse(node.Attributes["maxSlope"].Value)
                 };
             }
@@ -43,7 +43,7 @@
         // Labels of those known sequences
         private ArrayList sequenceIds;
 
-        // Maximum treshhold settings per gesture sequence
+        // Maximum threshold settings per gesture sequence
         private ArrayList recognitionSettings;
 
         /// <summary>
@@ -82,8 +82,8 @@
         /// </summary>
         /// <param name="gestureId">The gesture id</param>
         /// <param name="seq">The gesture sequence</param>
-        /// <param name="settings">The treshhold settings</param>
-        public void AddPatterns(GestureId gestureId, ArrayList seq, TreshholdSettings settings)
+        /// <param name="settings">The threshold settings</param>
+        public void AddPatterns(GestureId gestureId, ArrayList seq, ThresholdSettings settings)
         {
             sequences.Add(seq);
             sequenceIds.Add(gestureId);
@@ -111,14 +111,14 @@
         {
             double minDist = double.PositiveInfinity;
             GestureId gestureId = GestureId.Unknown;
-            TreshholdSettings minSettings = null;
+            ThresholdSettings minSettings = null;
 
             for (int i = 0; i < sequences.Count; i++)
             {
-                TreshholdSettings settings = (TreshholdSettings)recognitionSettings[i];
+                ThresholdSettings settings = (ThresholdSettings)recognitionSettings[i];
                 ArrayList example = (ArrayList)sequences[i];
 
-                if (this.Distance((double[])seq[seq.Count - 1], (double[])example[example.Count - 1]) < settings.FirstTreshhold)
+                if (this.Distance((double[])seq[seq.Count - 1], (double[])example[example.Count - 1]) < settings.FirstThreshold)
                 {
                     double d = dtw(seq, example, settings) / (example.Count);
                     if (d < minDist)
@@ -132,7 +132,7 @@
 
             return new Gesture() 
             {
-                Id = (minSettings != null && minDist < minSettings.MatchTreshhold ? gestureId : GestureId.Unknown), 
+                Id = (minSettings != null && minDist < minSettings.MatchThreshold ? gestureId : GestureId.Unknown), 
                 MinDistance = minDist 
             };
         }
@@ -160,7 +160,7 @@
         /// <param name="seq2">Sequence 2</param>
         /// <param name="settings">The settings object</param>
         /// <returns>DTW distance</returns>
-        public double dtw(ArrayList seq1, ArrayList seq2, TreshholdSettings settings)
+        public double dtw(ArrayList seq1, ArrayList seq2, ThresholdSettings settings)
         {
             // Init
             ArrayList seq1r = new ArrayList(seq1); seq1r.Reverse();
