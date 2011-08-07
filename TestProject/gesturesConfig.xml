@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <gestures>    
+    <gesture id="1" filename="gesture_RightHandSwipeLeft.dat" />
+    <gesture id="2" filename="gesture_RightHandSwipeRight.dat" />
+    <gesture id="3" filename="gesture_RightHandClick.dat" />
+    <gesture id="4" filename="gesture_LeftHandSwipeLeft.dat" />
+    <gesture id="5" filename="gesture_LeftHandSwipeRight.dat" />
+    <gesture id="6" filename="gesture_LeftHandClick.dat" />
+  </gestures>
+  <states>
+    <state id="1" typename="Kinect.Recognition.States.StateIdle" />
+    <state id="2" typename="Kinect.Recognition.States.StateWaitingCommand" />
+    <state id="3" typename="Kinect.Recognition.States.StateRecording" />
+  </states>
+  <gesturetransitions>
+    <gesturetransition fromState="2" onGesture="1" raiseStateEvent="1"/>
+    <gesturetransition fromState="2" onGesture="2" raiseStateEvent="1"/>
+    <gesturetransition fromState="2" onGesture="3" raiseStateEvent="1"/>
+    <gesturetransition fromState="2" onGesture="4" raiseStateEvent="1"/>
+    <gesturetransition fromState="2" onGesture="5" raiseStateEvent="1"/>
+    <gesturetransition fromState="2" onGesture="6" raiseStateEvent="1"/>
+  </gesturetransitions>
+  <statetransitions>
+    <transition fromState="0" onEvent="1" moveToState="1" />
+    <transition fromState="1" onEvent="2" moveToState="2" />
+    <transition fromState="2" onEvent="3" moveToState="3" />
+    <transition fromState="2" onEvent="1" moveToState="1" />
+    <transition fromState="3" onEvent="1" moveToState="1" />
+  </statetransitions>
+  <gestureSettings firstTreshhold="1" matchTreshhold="1" maxSlope="3">
+    <gestureSetting gesture="1" firstTreshhold="1" matchTreshhold="1" maxSlope="3" />
+    <gestureSetting gesture="2" firstTreshhold="1" matchTreshhold="1" maxSlope="3" />
+    <gestureSetting gesture="3" firstTreshhold="0.5" matchTreshhold="1" maxSlope="3" />
+  </gestureSettings>
+</configuration>

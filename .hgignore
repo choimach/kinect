@@ -1,0 +1,18 @@
+syntax: glob
+
+*.suo
+*.webinfo
+[Bb]in
+*/[Bb]in
+[Rr]elease
+*/[Rr]elease
+[Dd]ebug
+*/[Dd]ebug
+
+*.exe
+*.obj
+*.pdb
+*.user
+*.vspscc
+*.sbr
+*.scc
