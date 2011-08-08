@@ -31,7 +31,7 @@
         {
             get
             {
-                frameCounter = (frameCounter + 1) % RecognitionConstants.SkeletonSkipFrameCount;
+                frameCounter = (frameCounter + 1) % base.Context.SkipFrames;
                 return frameCounter == 0;
             }
         }
@@ -81,7 +81,7 @@
         protected virtual void ResetState()
         {
             this.frameCounter = 0;
-            this.patternBuffer = new ArrayList(RecognitionConstants.GestureMaxFramesCount);
+            this.patternBuffer = new ArrayList(base.Context.MaxFrames);
         }
     }
 }

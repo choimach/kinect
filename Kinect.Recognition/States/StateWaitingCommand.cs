@@ -62,7 +62,7 @@
                 ArrayList frameBuffer = base.FrameBuffer;
 
                 // handle recognition if we have some sequence already
-                if (frameBuffer.Count > RecognitionConstants.GestureMinFramesCount)
+                if (frameBuffer.Count > base.Context.MinFrames)
                 {
                     gesture = this.recognizer.Recognize(frameBuffer);
                     if (gesture != null && gesture.Id != GestureId.Unknown)
@@ -78,11 +78,11 @@
                 }
 
                 // maintain buffer size
-                if (frameBuffer.Count > RecognitionConstants.GestureMaxFramesCount)
+                if (frameBuffer.Count > base.Context.MaxFrames)
                     frameBuffer.RemoveAt(0);
 
                 // add current skeleton data to recognition buffer
-                SkeletonTrackingData trackingData = new SkeletonTrackingData(origData, base.Context.IsJointTracked);
+                SkeletonTrackingData trackingData = new SkeletonTrackingData(origData, base.Context.IsJointTracked, this.Context);
                 frameBuffer.Add(trackingData.DTWData);
             }
 

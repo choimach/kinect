@@ -7,6 +7,15 @@
     using Microsoft.Research.Kinect.Nui;
     using System.Diagnostics;
 
+    /// <summary>
+    /// Number of gemoetrical dimensions used for tracking
+    /// </summary>
+    public enum TrackingMode
+    {
+        Mode2D = 2,
+        Mode3D = 3
+    }
+
     public class TrackingContext
     {
         private int activeSkeletonId;
@@ -22,12 +31,12 @@
         /// <summary>
         /// Current cue joint
         /// </summary>
-        public JointID? CurrentCue { get; set; }
+        public virtual JointID? CurrentCue { get; set; }
 
         /// <summary>
         /// Currently active skeleton
         /// </summary>
-        public int ActiveSkeleton 
+        public virtual int ActiveSkeleton 
         {
             get
             {
@@ -42,6 +51,26 @@
                 activeSkeletonId = value;
             }
         }
+
+        /// <summary>
+        /// Returns the tracking mode as specified by the user
+        /// </summary>
+        public TrackingMode TrackingMode { get; set; }
+
+        /// <summary>
+        /// Returns the maximum number of frames tracked per gesture
+        /// </summary>
+        public int MaxFrames { get; set; }
+
+        /// <summary>
+        /// Returns the minimum number of frames tracked per gesture
+        /// </summary>
+        public int MinFrames { get; set; }
+
+        /// <summary>
+        /// Returns the number of frames skipped during continuous recognition
+        /// </summary>
+        public int SkipFrames { get; set; }
 
         /// <summary>
         /// Determines if a joint is being tracked for gesture recognition purposes,
@@ -99,7 +128,7 @@
                         break;
                 }
 
-                return result * RecognitionConstants.TrackingGeometricalDimensionality;
+                return result * (int)this.TrackingMode;
             }
         }
     }

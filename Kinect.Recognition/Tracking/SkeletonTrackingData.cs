@@ -5,20 +5,21 @@
     using System.Linq;
     using System.Text;
     using Microsoft.Research.Kinect.Nui;
-    using System.Windows;
 
     public class SkeletonTrackingData
     {
-        private Dictionary<JointID, Point> points;
+        private TrackingContext Context { get; set; }
+        private Dictionary<JointID, Vector> points;
         
         /// <summary>
         /// Constructor
         /// </summary>
-        public SkeletonTrackingData(SkeletonData data, Predicate<Joint> jointFilter)
+        public SkeletonTrackingData(SkeletonData data, Predicate<Joint> jointFilter, TrackingContext context)
         {
             this.points = null;
             this.JointFilter = jointFilter;
             this.SkeletonData = data;
+            this.Context = context;
         }
         
         /// <summary>
@@ -36,12 +37,12 @@
         /// </summary>
         /// <param name="index">The index</param>
         /// <returns>A Point object</returns>
-        public Point this[JointID index]
+        public Vector this[JointID index]
         {
             get
             {
                 this.CheckAndInitialize();
-                return points.ContainsKey(index) ? points[index] : default(Point);
+                return points.ContainsKey(index) ? points[index] : default(Vector);
             }
         }
 
@@ -50,25 +51,27 @@
         /// </summary>
         /// <param name="data">The input skeleton data</param>
         /// <returns>Normalized skeleton data, coordinates according to the point between the shoulders</returns>
-        private void CheckAndInitialize()
+        protected virtual void CheckAndInitialize()
         {
             // check if already initialized
             if (this.points != null)
                 return;
 
-            points = new Dictionary<JointID, Point>();
-            Point shoulderRight = default(Point), shoulderLeft = default(Point);
-
-            Joint j = this.SkeletonData.Joints[JointID.ShoulderLeft];
-            shoulderLeft = new Point(j.Position.X, j.Position.Y);
-
-            j = this.SkeletonData.Joints[JointID.ShoulderRight];
-            shoulderRight = new Point(j.Position.X, j.Position.Y);
+            points = new Dictionary<JointID, Vector>();
+            Vector shoulderRight = this.SkeletonData.Joints[JointID.ShoulderRight].Position; 
+            Vector shoulderLeft = this.SkeletonData.Joints[JointID.ShoulderLeft].Position;
 
             // get the center point and adjust the joints data with it as a center of the coord. system
-            Point center = new Point((shoulderLeft.X + shoulderRight.X) / 2, (shoulderLeft.Y + shoulderRight.Y) / 2);
-            double shoulderDist = Math.Sqrt(Math.Pow((shoulderLeft.X - shoulderRight.X), 2) + Math.Pow((shoulderLeft.Y - shoulderRight.Y), 2));
-
+            Vector center = new Vector()
+            {
+                X = (shoulderLeft.X + shoulderRight.X) / 2,
+                Y = (shoulderLeft.Y + shoulderRight.Y) / 2,
+                Z = (shoulderLeft.Z + shoulderRight.Z) / 2
+            };
+                
+            float shoulderDist = (float)Math.Sqrt(Math.Pow((shoulderLeft.X - shoulderRight.X), 2) 
+                                            + Math.Pow((shoulderLeft.Y - shoulderRight.Y), 2)
+                                            + Math.Pow((shoulderLeft.Z - shoulderRight.Z), 2));
 
             foreach (Joint joint in this.SkeletonData.Joints)
             {
@@ -76,7 +79,12 @@
                 {
                     // transpose and normalize the coordinates with the shoulder distance as a unit 
                     // (to avoid problems when the skeleton has different scale and absolute position)
-                    points[joint.ID] = new Point((joint.Position.X - center.X) / shoulderDist, (joint.Position.Y - center.Y) / shoulderDist);
+                    points[joint.ID] = new Vector()
+                    {
+                        X = (joint.Position.X - center.X) / shoulderDist, 
+                        Y = (joint.Position.Y - center.Y) / shoulderDist,
+                        Z = (joint.Position.Z - center.Z) / shoulderDist
+                    };
                 }
             }
         }
@@ -84,22 +92,27 @@
         /// <summary>
         /// Property for obtaining the skeleton data in a DTW-compatible format
         /// </summary>
-        public double[] DTWData
+        public virtual double[] DTWData
         {
             get
             {
                 this.CheckAndInitialize();
 
-                double[] tmp = new double[points.Count * 2];
+                double[] tmp = new double[this.Context.TrackingDimensionality];
                 int i = 0;
+                int offset = (int)this.Context.TrackingMode;
 
-                Dictionary<JointID, Point>.Enumerator enumerator = points.GetEnumerator();
+                Dictionary<JointID, Vector>.Enumerator enumerator = points.GetEnumerator();
 
                 while (enumerator.MoveNext())
                 {
-                    Point p = enumerator.Current.Value;
-                    tmp[2 * i] = p.X;
-                    tmp[2 * i + 1] = p.Y;
+                    Vector p = enumerator.Current.Value;
+                    tmp[offset * i] = p.X;
+                    tmp[offset * i + 1] = p.Y;
+
+                    if (this.Context.TrackingMode == TrackingMode.Mode3D)
+                        tmp[offset * i + 2] = p.Z;
+
                     ++i;
                 }
 

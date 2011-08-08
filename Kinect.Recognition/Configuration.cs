@@ -16,6 +16,11 @@
 
     public class Configuration : IConfiguration<TrackingContext>
     {
+        private TrackingMode? trackingMode;
+        private int? gestureMaxFrames;
+        private int? gestureMinFrames;
+        private int? skipFrames;
+
         public Dictionary<FSMStateId, IState<TrackingContext>> States { get; private set; }
         public Dictionary<GestureId, ArrayList> Gestures { get; private set; }
         public Dictionary<KeyValuePair<FSMStateId, GestureId>, FSMEventId> GestureTransitions { get; private set; }
@@ -32,6 +37,10 @@
             this.GestureTransitions = new Dictionary<KeyValuePair<FSMStateId, GestureId>, FSMEventId>();
             this.StateTransitions = new Dictionary<KeyValuePair<FSMStateId, FSMEventId>, FSMStateId>();
             this.GestureSettings = new Dictionary<GestureId, DTWRecognizer.ThresholdSettings>();
+            this.trackingMode = null;
+            this.gestureMaxFrames = null;
+            this.gestureMinFrames = null;
+            this.skipFrames = null;
         }
 
         /// <summary>
@@ -105,11 +114,49 @@
             XmlDocument config = new XmlDocument();
             config.Load(cfgFileName);
 
+            this.LoadContextSettings(config);
             this.LoadStates(config);
             this.LoadGestures(config);
             this.LoadGestureTransitions(config);
             this.LoadStateTransitions(config);
             this.LoadThresholds(config);
+        }
+
+        /// <summary>
+        /// Creates and initializes a tracking context object
+        /// </summary>
+        /// <returns>A context</returns>
+        public TrackingContext CreateContext()
+        {
+            if (this.trackingMode == null ||
+                this.gestureMaxFrames == null ||
+                this.gestureMinFrames == null ||
+                this.skipFrames == null)
+                throw new ApplicationException("The configuration has not been initialized properly or tracking settings are missing!");
+
+            TrackingContext ctx = new TrackingContext();
+            ctx.TrackingMode = (TrackingMode)this.trackingMode;
+            ctx.MaxFrames = (int)this.gestureMaxFrames;
+            ctx.MinFrames = (int)this.gestureMinFrames;
+            ctx.SkipFrames = (int)this.skipFrames;
+            
+            return ctx;
+        }
+
+        /// <summary>
+        /// Loads the tracking context settings
+        /// </summary>
+        /// <param name="config"></param>
+        private void LoadContextSettings(XmlDocument config)
+        {
+            config.ProcessXmlNodes("//configuration/tracking",
+                                    tracking =>
+                                    {
+                                        this.trackingMode = (TrackingMode)int.Parse(tracking.Attributes["dimensions"].Value);
+                                        this.gestureMinFrames = int.Parse(tracking.Attributes["minFrames"].Value);
+                                        this.gestureMaxFrames = int.Parse(tracking.Attributes["maxFrames"].Value);
+                                        this.skipFrames = int.Parse(tracking.Attributes["skipFrames"].Value);
+                                    });
         }
 
         /// <summary>

@@ -123,14 +123,14 @@
                 ArrayList frameBuffer = base.FrameBuffer;
 
                 // if we record more than max frames, this state should change
-                if (frameBuffer.Count >= RecognitionConstants.GestureMaxFramesCount)
+                if (frameBuffer.Count >= base.Context.MaxFrames)
                 {
                     base.Controller.PerformTransition(FSMEventId.GoIdle);
                 }
                 else
                 {
                     // add current skeleton data to recognition buffer
-                    SkeletonTrackingData trackingData = new SkeletonTrackingData(origData, base.Context.IsJointTracked);
+                    SkeletonTrackingData trackingData = new SkeletonTrackingData(origData, base.Context.IsJointTracked, this.Context);
                     frameBuffer.Add(trackingData.DTWData);
                     this.RaiseEvent(this.FrameRecorded);
                 }
