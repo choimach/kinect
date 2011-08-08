@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
+  <tracking dimensions="2" maxFrames="20" minFrames="5" skipFrames="3" />
   <gestures>    
     <gesture id="1" filename="gesture_RightHandSwipeLeft.dat" />
     <gesture id="2" filename="gesture_RightHandSwipeRight.dat" />

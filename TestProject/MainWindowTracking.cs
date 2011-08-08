@@ -39,7 +39,7 @@ namespace TestProject
             cfg.GesturesFolder = file + @"\..\..\Gestures\";
             cfg.InitializeFrom(file + @"\..\..\gesturesConfig.xml");
                         
-            context = new TrackingContext();
+            context = cfg.CreateContext();
             fsm = new GesturesFSM<TrackingContext>(context);
             fsm.InitializeFromConfiguration(cfg);
 
@@ -62,7 +62,7 @@ namespace TestProject
 
         private void fsm_GestureRecognized(object sender, GestureRecognizedEventArgs args)
         {
-            AddMessage(string.Format("Gesture {0} recognized, distance {1}!", args.Gesture.Id, args.Gesture.MinDistance.ToString("F2")));
+            AddMessage(string.Format("Gesture {0} recognized, distance {1}", args.Gesture.Id, args.Gesture.MinDistance.ToString("F2")));
         }
 
         void recordingState_RecordingStopped(object sender, GestureRecordingEventArgs args)
