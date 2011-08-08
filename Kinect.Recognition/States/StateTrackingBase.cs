@@ -21,7 +21,6 @@
         public StateTrackingBase(FSMStateId id)
             : base(id)
         {
-            this.ResetState();
         }
 
         /// <summary>
