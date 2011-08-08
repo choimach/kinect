@@ -1,4 +1,12 @@
-﻿using System.Reflection;
+﻿/////////////////////////////////////////////////////////////////////////
+//
+// This code is licensed under the terms of the 
+// Microsoft Kinect for Windows SDK (Beta) from Microsoft Research 
+// License Agreement: http://research.microsoft.com/KinectSDK-ToU
+//
+/////////////////////////////////////////////////////////////////////////
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -8,9 +16,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("KinectGestureRecognition")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("KinectGestureRecognition")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

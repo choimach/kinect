@@ -1,14 +1,3 @@
-/////////////////////////////////////////////////////////////////////////
-//
-// This module contains code to do Kinect NUI initialization and
-// processing and also to display NUI streams on screen.
-//
-// Copyright © Microsoft Corporation.  All rights reserved.  
-// This code is licensed under the terms of the 
-// Microsoft Kinect for Windows SDK (Beta) from Microsoft Research 
-// License Agreement: http://research.microsoft.com/KinectSDK-ToU
-//
-/////////////////////////////////////////////////////////////////////////
 using System;
 using System.Collections.Generic;
 using System.Linq;
