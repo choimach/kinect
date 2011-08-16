@@ -1,5 +1,6 @@
 syntax: glob
 
+*/TestResults
 *.suo
 *.webinfo
 [Bb]in
@@ -16,3 +17,4 @@ syntax: glob
 *.vspscc
 *.sbr
 *.scc
+

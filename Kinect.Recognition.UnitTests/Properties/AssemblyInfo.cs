@@ -1,22 +1,14 @@
-﻿/////////////////////////////////////////////////////////////////////////
-//
-// This code is licensed under the terms of the 
-// Microsoft Kinect for Windows SDK (Beta) from Microsoft Research 
-// License Agreement: http://research.microsoft.com/KinectSDK-ToU
-//
-/////////////////////////////////////////////////////////////////////////
-
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("KinectGestureRecognition")]
+[assembly: AssemblyTitle("Kinect.Recognition.UnitTests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("KinectGestureRecognition")]
+[assembly: AssemblyProduct("Kinect.Recognition.UnitTests")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -26,7 +18,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ca03de80-85a5-4163-b33c-89d76ebb03c1")]
+[assembly: Guid("d2ffbd45-4532-46e1-9d6e-43ed25f57f0e")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -37,8 +29,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-
-[assembly: InternalsVisibleTo("Kinect.Recognition.UnitTests")]

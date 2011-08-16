@@ -42,6 +42,35 @@
 
                 return result;
             }
+
+            /// <summary>
+            /// Overrides the equality operator
+            /// </summary>
+            /// <param name="obj">The object to compare with</param>
+            /// <returns>True if the objects are equal, otherwise false</returns>
+            public override bool Equals(object obj)
+            {
+                bool result = false;
+                
+                if (obj == null || 
+                    obj as DTWRecognizer.ThresholdSettings == null)
+                {
+                    result = false;
+                }
+                else if (object.ReferenceEquals(this, obj))
+                {
+                    result = true;
+                }
+                else
+                {
+                    DTWRecognizer.ThresholdSettings other = obj as DTWRecognizer.ThresholdSettings;
+                    result = this.FirstThreshold == other.FirstThreshold &&
+                                this.MatchThreshold == other.MatchThreshold &&
+                                this.MaxSlope == other.MaxSlope;
+                }
+
+                return result;
+            }
         }
 
         // Size of obeservations vectors.

@@ -8,6 +8,7 @@
     using Kinect.Recognition.Tracking;
     using Kinect.Recognition.Gestures;
     using Kinect.Recognition.Extensions;
+    using System.Collections;
 
     public class StateIdle : StateBase
     {
@@ -82,7 +83,7 @@
         /// </summary>
         /// <param name="joints">A collection of joints</param>
         /// <returns>An enumerable of candidate cue joints</returns>
-        private IEnumerable<Joint> GetCandidateCueJoints(JointsCollection joints)
+        private IEnumerable<Joint> GetCandidateCueJoints(IEnumerable joints)
         {
             foreach (Joint j in joints)
             {

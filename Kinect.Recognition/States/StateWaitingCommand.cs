@@ -91,6 +91,15 @@
         }
 
         /// <summary>
+        /// Initializes the local state
+        /// </summary>
+        protected override void ResetState()
+        {
+            base.ResetState();
+            this.lastRecognitionTime = DateTime.Now.Ticks;
+        }
+
+        /// <summary>
         /// Checks if the current skeleton is idle and the state should be exited.
         /// </summary>
         private void ExitStateOnIdle()
@@ -119,15 +128,6 @@
                     this.recognizer.AddPatterns(gestureId, cfg.Gestures[gestureId], cfg.GestureSettings[gestureId]);
                 }
             }
-        }
-        
-        /// <summary>
-        /// Initializes the local state
-        /// </summary>
-        protected override void ResetState()
-        {
-            base.ResetState();
-            this.lastRecognitionTime = DateTime.Now.Ticks;
-        }
+        }                
     }
 }

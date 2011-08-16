@@ -32,16 +32,8 @@
         /// </summary>
         private Configuration()
         {
-            this.States = new Dictionary<FSMStateId, IState<TrackingContext>>();
-            this.Gestures = new Dictionary<GestureId, ArrayList>();
-            this.GestureTransitions = new Dictionary<KeyValuePair<FSMStateId, GestureId>, FSMEventId>();
-            this.StateTransitions = new Dictionary<KeyValuePair<FSMStateId, FSMEventId>, FSMStateId>();
-            this.GestureSettings = new Dictionary<GestureId, DTWRecognizer.ThresholdSettings>();
-            this.trackingMode = null;
-            this.gestureMaxFrames = null;
-            this.gestureMinFrames = null;
-            this.skipFrames = null;
-        }
+            this.InitLocalState();
+        }   
 
         /// <summary>
         /// The single instance of the repository
@@ -68,8 +60,19 @@
         /// Persists a recorded gesture
         /// </summary>
         /// <param name="args">The recording arguments</param>
-        public void SaveGesture(GestureRecordingEventArgs args)
+        /// <returns>The name of the created file</returns>
+        public string SaveGesture(GestureRecordingEventArgs args)
         {
+            if (args == null)
+                throw new ArgumentNullException("arguments cannot be null");
+
+            if (args.Frames == null ||
+                args.Frames.Count == 0)
+                throw new ArgumentException("arguments should contain some frames to be serialized");
+
+            if (args.Id == GestureId.Unknown)
+                throw new ArgumentException("Invalid gesture id");
+
             string fileName = string.Format("{0}gesture_{1}.dat", this.GesturesFolder, args.Id.ToString());
 
             using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
@@ -77,6 +80,8 @@
                 BinaryFormatter formatter = new BinaryFormatter();
                 formatter.Serialize(file, args.Frames);
             }
+
+            return fileName;
         }
 
         /// <summary>
@@ -108,9 +113,10 @@
         /// <param name="cfgFileName">Full name of the xml configuration file</param>
         public void InitializeFrom(string cfgFileName)
         {
-            if (!File.Exists(cfgFileName))
-                throw new ArgumentException(string.Format("File {0} does not exist"));
-
+            if (cfgFileName == null ||
+                !File.Exists(cfgFileName))
+                throw new ArgumentException(string.Format("File {0} does not exist", cfgFileName));
+            
             XmlDocument config = new XmlDocument();
             config.Load(cfgFileName);
 
@@ -141,6 +147,22 @@
             ctx.SkipFrames = (int)this.skipFrames;
             
             return ctx;
+        }
+
+        /// <summary>
+        /// Initializes the object's state. Used also by unit testing
+        /// </summary>
+        internal void InitLocalState()
+        {
+            this.States = new Dictionary<FSMStateId, IState<TrackingContext>>();
+            this.Gestures = new Dictionary<GestureId, ArrayList>();
+            this.GestureTransitions = new Dictionary<KeyValuePair<FSMStateId, GestureId>, FSMEventId>();
+            this.StateTransitions = new Dictionary<KeyValuePair<FSMStateId, FSMEventId>, FSMStateId>();
+            this.GestureSettings = new Dictionary<GestureId, DTWRecognizer.ThresholdSettings>();
+            this.trackingMode = null;
+            this.gestureMaxFrames = null;
+            this.gestureMinFrames = null;
+            this.skipFrames = null;
         }
 
         /// <summary>
