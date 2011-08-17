@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using Microsoft.Research.Kinect.Nui;
+    using Kinect.Recognition.Adapters;
 
     public enum FSMStateId
     {
@@ -39,7 +40,7 @@
         /// Processes a skeleton frame
         /// </summary>
         /// <param name="args">The </param>
-        void ProcessSkeletons(SkeletonFrame args);
+        void ProcessSkeletons(ISkeletonFrame args);
 
         /// <summary>
         /// State notification

@@ -9,6 +9,7 @@
     using Kinect.Recognition.Tracking;
     using System.Collections;
     using Kinect.Recognition.Gestures;
+    using Kinect.Recognition.Adapters;
 
 
     /// <summary>
@@ -116,7 +117,7 @@
         /// </summary>
         /// <param name="origData">the original skeleton event data</param>
         /// <returns>true if traversing should continue with next skeleton, otherwise false</returns>
-        protected override bool ProcessSkeleton(SkeletonData origData)
+        protected override bool ProcessSkeleton(ISkeletonData origData)
         {
             if (this.CanHandleFrame)
             {

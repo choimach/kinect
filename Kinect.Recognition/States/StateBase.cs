@@ -6,6 +6,7 @@
     using System.Text;
     using Microsoft.Research.Kinect.Nui;
     using Kinect.Recognition.Tracking;
+    using Kinect.Recognition.Adapters;
 
     /// <summary>
     /// Base state implementation
@@ -81,12 +82,12 @@
         /// Implements basic skeleton tracking processing event
         /// </summary>
         /// <param name="data"></param>
-        public void ProcessSkeletons(SkeletonFrame data)
+        public void ProcessSkeletons(ISkeletonFrame data)
         {
             if (data == null || !this.Initialized)
                 return;
             
-            foreach (SkeletonData skeleton in this.ObservableSkeletons(data.Skeletons))
+            foreach (ISkeletonData skeleton in this.ObservableSkeletons(data.Skeletons))
             {
                 bool canContinue = this.ProcessSkeleton(skeleton);
 
@@ -100,14 +101,14 @@
         /// </summary>
         /// <param name="skeletons">All skeletons</param>
         /// <returns>The one to be used</returns>
-        protected abstract IEnumerable<SkeletonData> ObservableSkeletons(SkeletonData[] skeletons);
+        protected abstract IEnumerable<ISkeletonData> ObservableSkeletons(IEnumerable<ISkeletonData> skeletons);
 
         /// <summary>
         /// Allows individual skeleton tracking.
         /// </summary>
         /// <param name="origData">the original skeleton event data</param>
         /// <returns>true if traversing should continue with next skeleton, otherwise false</returns>
-        protected virtual bool ProcessSkeleton(SkeletonData origData)
+        protected virtual bool ProcessSkeleton(ISkeletonData origData)
         {
             return false;
         }

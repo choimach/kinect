@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using Microsoft.Research.Kinect.Nui;
+    using Kinect.Recognition.Adapters;
 
     public class SkeletonTrackingData
     {
@@ -14,7 +15,7 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        public SkeletonTrackingData(SkeletonData data, Predicate<Joint> jointFilter, TrackingContext context)
+        public SkeletonTrackingData(ISkeletonData data, Predicate<Joint> jointFilter, TrackingContext context)
         {
             this.points = null;
             this.JointFilter = jointFilter;
@@ -30,7 +31,7 @@
         /// <summary>
         /// Gets or sets the original skeleton data
         /// </summary>
-        public SkeletonData SkeletonData { get; set; }
+        public ISkeletonData SkeletonData { get; set; }
 
         /// <summary>
         /// Indexer for obtaining joint data
@@ -58,8 +59,8 @@
                 return;
 
             points = new Dictionary<JointID, Vector>();
-            Vector shoulderRight = this.SkeletonData.Joints[JointID.ShoulderRight].Position; 
-            Vector shoulderLeft = this.SkeletonData.Joints[JointID.ShoulderLeft].Position;
+            Vector shoulderRight = this.SkeletonData.JointAt(JointID.ShoulderRight).Position; 
+            Vector shoulderLeft = this.SkeletonData.JointAt(JointID.ShoulderLeft).Position;
 
             // get the center point and adjust the joints data with it as a center of the coord. system
             Vector center = new Vector()

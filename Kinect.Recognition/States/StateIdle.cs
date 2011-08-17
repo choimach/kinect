@@ -9,6 +9,7 @@
     using Kinect.Recognition.Gestures;
     using Kinect.Recognition.Extensions;
     using System.Collections;
+    using Kinect.Recognition.Adapters;
 
     public class StateIdle : StateBase
     {
@@ -31,9 +32,9 @@
         /// </summary>
         /// <param name="skeletons">all skeletons</param>
         /// <returns>An iterator over all received skeletons</returns>
-        protected override IEnumerable<SkeletonData> ObservableSkeletons(SkeletonData[] skeletons)
+        protected override IEnumerable<ISkeletonData> ObservableSkeletons(IEnumerable<ISkeletonData> skeletons)
         {
-            foreach (SkeletonData skeleton in skeletons)
+            foreach (ISkeletonData skeleton in skeletons)
                 if (skeleton.TrackingState != SkeletonTrackingState.NotTracked)
                     yield return skeleton;
         }
@@ -43,7 +44,7 @@
         /// </summary>
         /// <param name="origData">the original skeleton event data</param>
         /// <returns>true if traversing should continue with next skeleton, otherwise false</returns>
-        protected override bool ProcessSkeleton(SkeletonData origData)
+        protected override bool ProcessSkeleton(ISkeletonData origData)
         {
             bool foundSkeleton = false;
             int cueJointId = this.SkeletonNeedsAttention(origData);
@@ -68,11 +69,11 @@
         /// Joint is considered requiring attention if it's raised at the same 
         /// height as the skeletons head or higher
         /// </remarks>
-        private int SkeletonNeedsAttention(SkeletonData origData)
+        private int SkeletonNeedsAttention(ISkeletonData origData)
         {
             // get the head and the limb raised the highest (as this one has the highest chance 
             // of being raised to draw attention)
-            Joint head = origData.Joints[JointID.Head];
+            Joint head = origData.JointAt(JointID.Head);
             Joint cueJoint = this.GetCandidateCueJoints(origData.Joints).Max<Joint, float>(j => j.Position.Y, (f1, f2) => { return f1 - f2; });
 
             return (this.IsItCueJoint(cueJoint) && head.Position.Y <= cueJoint.Position.Y) ? (int)cueJoint.ID : RecognitionConstants.InvalidJointId;

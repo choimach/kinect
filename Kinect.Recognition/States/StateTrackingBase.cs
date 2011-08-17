@@ -8,6 +8,7 @@
     using Kinect.Recognition.Tracking;
     using Microsoft.Research.Kinect.Nui;
     using System.Diagnostics;
+    using Kinect.Recognition.Adapters;
 
     public class StateTrackingBase : StateBase
     {
@@ -62,11 +63,11 @@
         /// </summary>
         /// <param name="skeletons">A list of skeletons</param>
         /// <returns>The active skeleton</returns>
-        protected override IEnumerable<SkeletonData> ObservableSkeletons(SkeletonData[] skeletons)
+        protected override IEnumerable<ISkeletonData> ObservableSkeletons(IEnumerable<ISkeletonData> skeletons)
         {
             int skeletonIdx = base.Context.ActiveSkeleton;
 
-            foreach (SkeletonData skeleton in skeletons)
+            foreach (ISkeletonData skeleton in skeletons)
                 if (skeleton.TrackingState != SkeletonTrackingState.NotTracked && skeleton.TrackingID == skeletonIdx)
                 {
                     yield return skeleton;

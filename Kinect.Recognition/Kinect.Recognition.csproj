@@ -45,6 +45,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\SkeletonData.cs" />
+    <Compile Include="Adapters\SkeletonFrame.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="States\IConfiguration.cs" />
     <Compile Include="Tracking\Gesture.cs" />

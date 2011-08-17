@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Research.Kinect.Nui;
+using Kinect.Recognition.Adapters;
 
 namespace TestProject
 {
@@ -260,7 +261,7 @@ namespace TestProject
             } // for each skeleton
 
             if (fsm.Current != null)
-                fsm.Current.ProcessSkeletons(e.SkeletonFrame);
+                fsm.Current.ProcessSkeletons(new SkeletonFrameAdapter(e.SkeletonFrame));
         }
 
         void nui_ColorFrameReady(object sender, ImageFrameReadyEventArgs e)

@@ -71,6 +71,21 @@
 
                 return result;
             }
+
+            /// <summary>
+            /// Override of hash code retrieval
+            /// </summary>
+            /// <returns>hash code for an object</returns>
+            public override int GetHashCode()
+            {
+                int hash = 13;
+
+                hash = (hash * 7) + this.FirstThreshold.GetHashCode();
+                hash = (hash * 7) + this.MatchThreshold.GetHashCode();
+                hash = (hash * 7) + this.MaxSlope.GetHashCode();
+
+                return hash;
+            }
         }
 
         // Size of obeservations vectors.
