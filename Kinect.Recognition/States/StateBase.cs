@@ -47,7 +47,7 @@
         /// <summary>
         /// Gets or sets the current context
         /// </summary>
-        protected TrackingContext Context
+        protected virtual TrackingContext Context
         {
             get
             {

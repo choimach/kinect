@@ -8,6 +8,10 @@
     using Kinect.Recognition.Tracking;
     using System.Diagnostics;
 
+    /// <summary>
+    /// Gesture identification finite state machine
+    /// </summary>
+    /// <typeparam name="TContext">Type of the context object, shared amongst states</typeparam>
     public class GesturesFSM<TContext> : IFSMController where TContext : class
     {
         private Dictionary<KeyValuePair<FSMStateId, FSMEventId>, IState<TContext>> transitions;
@@ -39,7 +43,7 @@
         /// <summary>
         /// Initializes the FSM by triggering an idle
         /// </summary>
-        public void Initialize()
+        public virtual void Initialize()
         {
             Debug.Assert(this.transitions.Count > 0, "no transitions added");
 
@@ -50,7 +54,7 @@
         /// Initializes the FSM from the configuration object
         /// </summary>
         /// <param name="config">The configuration object</param>
-        public void InitializeFromConfiguration(IConfiguration<TContext> config)
+        public virtual void InitializeFromConfiguration(IConfiguration<TContext> config)
         {
             foreach (var pair in config.StateTransitions)
                 this.AddTransition(pair.Key.Key, pair.Key.Value, config.States[pair.Value]);
@@ -74,14 +78,11 @@
         /// Performs a state transition for a gesture
         /// </summary>
         /// <param name="eventId">The gesture for which to change state</param>
-        public void PerformTransition(FSMEventId eventId)
+        public virtual void PerformTransition(FSMEventId eventId)
         {
-            FSMStateId oldStateId = currentState != null ? currentState.Id : FSMStateId.Unknown;
-
-            if (currentState != null)
-                currentState.StateExited();
-
+            FSMStateId oldStateId = this.currentState != null ? this.currentState.Id : FSMStateId.Unknown;
             var transitionKey = this.GetTransitionKey(eventId);
+            IState<TContext> oldState = this.currentState;
 
             if (!transitions.ContainsKey(transitionKey))
                 throw new ApplicationException(string.Format("No transition for event {0} found", eventId.ToString()));
@@ -91,11 +92,17 @@
             if (currentState == null)
                 throw new ApplicationException(string.Format("Invalid state for event {0}", eventId.ToString()));
 
+            // we only enter/exit states if anything really changed
             if (currentState.Id != transitionKey.Key)
+            {
+                if (oldState != null)
+                    oldState.StateExited();
+
                 currentState.StateEntered(this.sharedContext);
 
-            if (this.StateChanged != null)
-                this.StateChanged(this, new StateChangedEventArgs() { OldState = oldStateId, NewState = currentState.Id });
+                if (this.StateChanged != null)
+                    this.StateChanged(this, new StateChangedEventArgs() { OldState = oldStateId, NewState = currentState.Id });
+            }
         }
 
         /// <summary>
